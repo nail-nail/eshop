@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Product</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h2>Create New Product</h2>
+    <form th:action="@{/product/create}" th:object="${product}" method="POST">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" th:field="*{productName}" class="form-control" id="name" placeholder="Enter product name">
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" th:field="*{productQuantity}" class="form-control" id="quantity">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>
