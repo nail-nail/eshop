@@ -49,4 +49,19 @@ public class ProductRepository {
         }
         return null;
     }
+
+    public void delete(Product productToDelete) {
+        if (productToDelete == null || productToDelete.getProductId() == null) {
+            return;
+        }
+        for (Product product : productData) {
+            if (productToDelete.getProductId().equals(product.getProductId())) {
+                productData.remove(productToDelete);
+                return;
+            }
+        }
+        return;
+    }
+
+
 }
