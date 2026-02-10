@@ -10,52 +10,57 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping
 public class ProductController {
 
     @Autowired
     private ProductService service;
 
-    @GetMapping("/create")
+    @GetMapping
+    public String homePage() {
+        return "index";
+    }
+
+    @GetMapping("/product/create")
     public String createProductPage(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
         return "createProduct";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/product/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
         service.create(product);
         return "redirect:/product/list";
     }
 
-    @GetMapping("/list")
+    @GetMapping("/product/list")
     public String productListPage(Model model) {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
         return "productList";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/product/edit/{id}")
     public String editProductPage(@PathVariable("id") String productId, Model model) {
         return renderEditPage(productId, model);
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/product/edit")
     public String editProductPageWithParam(@RequestParam(name = "id", required = false) String productId,
                                            Model model) {
         return renderEditPage(productId, model);
     }
     
 
-    @PostMapping("/edit")
+    @PostMapping("/product/edit")
     public String editProductPost(@ModelAttribute Product product) {
         service.update(product);
         return "redirect:/product/list";
     }
 
-    
-    @PostMapping("/delete/{id}")
+
+    @PostMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable("id") String productId, Model model) {
         Product product = service.findById(productId);
         if (product == null) {
