@@ -30,4 +30,12 @@ class ProductTest {
     void testGetProductQuantity() {
         assertEquals(100, this.product.getProductQuantity());
     }
+
+
+    @Test
+    void testProductValuesAreNotIncorrect() {
+        assertNotEquals("random-id", this.product.getProductId());
+        assertNotEquals("Produk Lain", this.product.getProductName());
+        assertNotEquals(0, this.product.getProductQuantity());
+    }
 }
