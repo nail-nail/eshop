@@ -9,9 +9,9 @@ group = "id.ac.ui.cs.advprog"
 version = "0.0.1-SNAPSHOT"
 description = "eshop"
 
-val seleniumJavaVersion = "4.14.1"
+val seleniumJavaVersion = "4.41.0"
 val seleniumJupiterVersion = "5.0.1"
-val webdrivermanagerVersion = "5.6.3"
+val webdrivermanagerVersion = "5.9.3"
 val junitJupiterVersion = "5.10.2"
 val junitPlatformVersion = "1.10.2"
 
