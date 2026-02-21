@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.sonarqube") version "5.1.0.4882"
 }
 
 group = "id.ac.ui.cs.advprog"
@@ -65,4 +66,26 @@ tasks.register<Test>(name = "functionalTest") {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+}
+
+sonarqube {
+    properties {
+        val sonarProjectKey = System.getenv("SONAR_PROJECT_KEY")?.takeIf { it.isNotBlank() } ?: "eshop"
+        property("sonar.projectKey", sonarProjectKey)
+        property("sonar.projectName", "eshop")
+        System.getenv("SONAR_ORGANIZATION")?.takeIf { it.isNotBlank() }?.let {
+            property("sonar.organization", it)
+        }
+        System.getenv("SONAR_HOST_URL")?.takeIf { it.isNotBlank() }?.let {
+            property("sonar.host.url", it)
+        }
+        System.getenv("SONAR_TOKEN")?.takeIf { it.isNotBlank() }?.let {
+            property("sonar.login", it)
+            property("sonar.token", it)
+        }
+    }
+}
+
+tasks.named("sonarqube") {
+    dependsOn("unitTest", "functionalTest")
 }
