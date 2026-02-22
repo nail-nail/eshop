@@ -100,7 +100,3 @@ sonarqube {
 tasks.named("sonar") {
     dependsOn("test")
 }
-
-tasks.matching { it.name == "sonarqube" }.configureEach {
-    dependsOn("test")
-}
