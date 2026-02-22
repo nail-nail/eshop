@@ -11,9 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class EshopApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+
 
     @Test
     void main_shouldInvokeSpringApplicationRun() {
