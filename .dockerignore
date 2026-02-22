@@ -5,4 +5,4 @@ out
 .git
 .gitignore
 Dockerfile
-render.yaml
+koyeb.yaml
