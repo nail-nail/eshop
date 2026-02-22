@@ -56,15 +56,6 @@ tasks.register<Test>(name = "unitTest") {
     }
 }
 
-tasks.register<Test>(name = "functionalTest") {
-    description = "Runs functional tests."
-    group = "verification"
-
-    filter {
-        includeTestsMatching("*FunctionalTest")
-    }
-}
-
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
