@@ -67,6 +67,14 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
 
+tasks.register<Test>(name = "functionalTest") {
+    description = "Runs functional tests."
+    group = "verification"
+
+    filter {
+        includeTestsMatching("*FunctionalTest")
+    }
+}
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
 }
