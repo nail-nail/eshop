@@ -128,6 +128,13 @@ class ProductControllerTest {
     }
 
     @Test
+    void editProductPage_withBlankQueryParam_shouldRedirect() throws Exception {
+        mockMvc.perform(get("/product/edit").param("id", "   "))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/product/list"));
+    }
+
+    @Test
     void editProductPost_shouldUpdateAndRedirect() throws Exception {
         mockMvc.perform(post("/product/edit")
                 .param("productId", "1")
