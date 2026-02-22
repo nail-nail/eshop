@@ -1,5 +1,6 @@
 plugins {
     java
+    jacoco
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.sonarqube") version "5.1.0.4882"
@@ -67,6 +68,17 @@ tasks.register<Test>(name = "functionalTest") {
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
+tasks.test {
+    filter {
+        excludeTestsMatching("*FunctionalTest")
+    }
+
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
 
 sonarqube {
     properties {
@@ -87,5 +99,5 @@ sonarqube {
 }
 
 tasks.named("sonarqube") {
-    dependsOn("unitTest", "functionalTest")
+    dependsOn("test", "functionalTest")
 }

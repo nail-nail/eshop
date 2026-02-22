@@ -1,11 +1,13 @@
-name: CI
+name: Continuous Integration (CI)
 
+## Run CI jobs on all branches by default
 on:
   push:
   pull_request:
 
 jobs:
   build:
+    name: Run tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,7 +39,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew --no-daemon test functionalTest
 
       - name: SonarQube scan
         run: ./gradlew --no-daemon sonarqube
