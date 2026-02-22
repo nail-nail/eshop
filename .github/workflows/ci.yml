@@ -18,9 +18,11 @@ jobs:
       SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
       SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -36,4 +38,4 @@ jobs:
         run: ./gradlew --no-daemon test
 
       - name: SonarQube scan
-        run: ./gradlew --no-daemon sonarqube
+        run: ./gradlew --no-daemon sonar
