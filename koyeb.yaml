@@ -13,7 +13,7 @@ services:
         value: "-XX:MaxRAMPercentage=75.0"
     git:
       repo: https://github.com/nail-nail/eshop
-      branch: main
+      branch: module-2-exercise
       workdir: .
       build_command: ./gradlew clean bootJar
       run_command: java -jar build/libs/*.jar
