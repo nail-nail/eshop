@@ -92,6 +92,31 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void testCreateGeneratesIdWhenMissing() {
+        Product product = new Product();
+        product.setProductName("AutoId Product");
+        product.setProductQuantity(10);
+
+        productRepository.create(product);
+
+        assertNotNull(product.getProductId());
+        assertFalse(product.getProductId().isEmpty());
+    }
+
+    @Test
+    void testCreateGeneratesIdWhenEmptyString() {
+        Product product = new Product();
+        product.setProductId("");
+        product.setProductName("AutoId Product");
+        product.setProductQuantity(10);
+
+        productRepository.create(product);
+
+        assertNotNull(product.getProductId());
+        assertFalse(product.getProductId().isEmpty());
+    }
+
+    @Test
     void testEditNonExistingProduct() {
         Product updatedProduct = new Product();
         updatedProduct.setProductId("does-not-exist");
@@ -99,6 +124,22 @@ class ProductRepositoryTest {
         updatedProduct.setProductQuantity(42);
 
         Product result = productRepository.update(updatedProduct);
+        assertNull(result);
+    }
+
+    @Test
+    void testUpdateNullProductReturnsNull() {
+        Product result = productRepository.update(null);
+        assertNull(result);
+    }
+
+    @Test
+    void testUpdateProductWithoutIdReturnsNull() {
+        Product product = new Product();
+        product.setProductName("No Id");
+        product.setProductQuantity(5);
+
+        Product result = productRepository.update(product);
         assertNull(result);
     }
 
@@ -129,5 +170,35 @@ class ProductRepositoryTest {
         productRepository.delete(ghostProduct);
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testDeleteNullProductDoesNothing() {
+        Product product = new Product();
+        product.setProductId("some-id");
+        productRepository.create(product);
+
+        productRepository.delete(null);
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+    }
+
+    @Test
+    void testDeleteProductWithoutIdDoesNothing() {
+        Product product = new Product();
+        product.setProductId("some-id");
+        productRepository.create(product);
+
+        Product noId = new Product();
+        productRepository.delete(noId);
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+    }
+
+    @Test
+    void testFindByIdNullReturnsNull() {
+        assertNull(productRepository.findById(null));
     }
 }
