@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: eshop
+    env: docker
+    plan: free
+    autoDeploy: true
+    region: singapore
+    branch: main
+    rootDir: .
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: "-XX:MaxRAMPercentage=75.0"

@@ -1,0 +1,8 @@
+.gradle
+build
+out
+.idea
+.git
+.gitignore
+Dockerfile
+render.yaml
