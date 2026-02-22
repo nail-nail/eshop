@@ -16,4 +16,4 @@ services:
       branch: module-2-exercise
       workdir: .
       build_command: ./gradlew clean bootJar
-      run_command: java -jar build/libs/*.jar
+      run_command: java -jar build/libs/*.jar --server.port=8000
