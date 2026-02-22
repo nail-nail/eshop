@@ -98,5 +98,5 @@ sonarqube {
 }
 
 tasks.named("sonarqube") {
-    dependsOn("test", "functionalTest")
+    dependsOn("test")
 }

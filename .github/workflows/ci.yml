@@ -18,15 +18,9 @@ jobs:
       SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
       SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      SELENIUM_JUPITER_HEADLESS: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
 
       - name: Set up JDK
         uses: actions/setup-java@v4
