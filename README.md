@@ -37,4 +37,3 @@ What do you think about the cleanliness of the code of the new functional test s
 the new code reduce the code quality? Identify the potential clean code issues, explain
 the reasons, and suggest possible improvements to make the code cleaner!
 1. Adding another functional test suite with the same setup would be redundant, as it would duplicate a lot of code, making maintenance harder and violating "Don’t Repeat Yourself". Changes to setup logic (e.g., new base path or credentials) would have to be updated in multiple classes. The duplication also hurts clarity because common concerns like input helpers or context resets are scattered. Extracting shared Selenium utilities/helpers or using an abstract base class for functional tests would keep setup in one place and keep each suite focused on its specific assertions.
-
