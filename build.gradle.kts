@@ -58,18 +58,18 @@ tasks.register<Test>(name = "unitTest") {
     }
 }
 
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
-}
-tasks.test {
-    filter {
-        excludeTestsMatching("*FunctionalTest")
-    }
+	tasks.withType<Test>().configureEach {
+	    useJUnitPlatform()
+	}
+	tasks.test {
+	    filter {
+	        excludeTestsMatching("*FunctionalTest")
+	    }
 
-    finalizedBy(tasks.jacocoTestReport)
-}
+	    finalizedBy(tasks.jacocoTestReport)
+	}
 
-tasks.register<Test>(name = "functionalTest") {
+	tasks.register<Test>(name = "functionalTest") {
     description = "Runs functional tests."
     group = "verification"
 
@@ -77,28 +77,34 @@ tasks.register<Test>(name = "functionalTest") {
         includeTestsMatching("*FunctionalTest")
     }
 }
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-}
+	tasks.jacocoTestReport {
+	    dependsOn(tasks.test)
+	    reports {
+	        xml.required.set(true)
+	        csv.required.set(false)
+	        html.required.set(true)
+	    }
+	}
 
-sonarqube {
-    properties {
-        val sonarProjectKey = System.getenv("SONAR_PROJECT_KEY")?.takeIf { it.isNotBlank() } ?: "eshop"
-        property("sonar.projectKey", sonarProjectKey)
-        property("sonar.projectName", "eshop")
-        System.getenv("SONAR_ORGANIZATION")?.takeIf { it.isNotBlank() }?.let {
-            property("sonar.organization", it)
-        }
-        System.getenv("SONAR_HOST_URL")?.takeIf { it.isNotBlank() }?.let {
-            property("sonar.host.url", it)
-        }
-        System.getenv("SONAR_TOKEN")?.takeIf { it.isNotBlank() }?.let {
-            property("sonar.login", it)
-            property("sonar.token", it)
-        }
-    }
-}
+	sonarqube {
+	    properties {
+	        val sonarProjectKey = System.getenv("SONAR_PROJECT_KEY")?.takeIf { it.isNotBlank() } ?: "eshop"
+	        property("sonar.projectKey", sonarProjectKey)
+	        property("sonar.projectName", "eshop")
+	        System.getenv("SONAR_ORGANIZATION")?.takeIf { it.isNotBlank() }?.let {
+	            property("sonar.organization", it)
+	        }
+	        System.getenv("SONAR_HOST_URL")?.takeIf { it.isNotBlank() }?.let {
+	            property("sonar.host.url", it)
+	        }
+	        System.getenv("SONAR_TOKEN")?.takeIf { it.isNotBlank() }?.let {
+	            property("sonar.login", it)
+	            property("sonar.token", it)
+	        }
+	        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile.absolutePath)
+	    }
+	}
 
 tasks.named("sonar") {
-    dependsOn("test")
+    dependsOn("test", "jacocoTestReport")
 }
