@@ -37,7 +37,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests
-        run: ./gradlew --no-daemon unitTest functionalTest
+        run: ./gradlew test
 
       - name: SonarQube scan
         run: ./gradlew --no-daemon sonarqube
