@@ -6,17 +6,36 @@ on:
   pull_request:
 
 jobs:
-  test:
+  build:
     name: Run tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
-      - name: Check out the Git repository
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Java toolchain
+
+
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
-          java-version: "21"
-          cache: "gradle"
-      - name: Run unit tests
-        run: ./gradlew test
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Run tests
+        run: ./gradlew --no-daemon test
+
+      - name: SonarQube scan
+        run: ./gradlew --no-daemon sonar

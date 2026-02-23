@@ -1,4 +1,16 @@
 #### Naila Khadijah - AdvProg B
+
+Modul 2:
+deployment link: https://sound-lois-nail-nail-db1080b4.koyeb.app/
+
+Reflection:
+1. List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them. 
+The first issue I fixed is field level injection. I cleaned up the codebase by switching both `ProductController` and `ProductServiceImpl` to constructor injection, eliminating the field-level `@Autowired`. I also created the `PRODUCT_LIST_REDIRECT` constant to remove six duplicated literals. This is the second issue I fixed. I also removed the redundant `throws Exception` declarations from the functional Selenium tests and enabled JaCoCo XML reporting with a `sonar.coverage.jacoco.xmlReportPaths` configuration so SonarCloud now reflects the true coverage of my codebase. I removed unused import `org.openqa.selenium.NoSuchElementException`from my unit test. I also removed some empty methods for cleaner code and better clarity.
+
+2. Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)! 
+Yes, I think it has met the definition of CI/CD. Every push or pull request automatically triggers the GitHub Actions workflow, which checks out the code, runs the full Gradle test suite, and publishes a SonarCloud analysis before merging, so we get rapid feedback on integration issues. This aligns with Continuous Integration definition. On the deployment side, the repo is linked to Koyeb via `koyeb.yaml`, so once CI succeeds and the change is pushed to `module-2-exercise`, Koyeb pulls the code, rebuilds the jar, and redeploys the service automatically. The process is still gated by source control, so any regression would be caught either by the CI tests or by the Koyeb health checks immediately after deployment.
+
+Modul 1:
 ## Reflection 1
 >You already implemented two new features using Spring Boot. Check again your source code
 and evaluate the coding standards that you have learned in this module. Write clean code
@@ -17,6 +29,8 @@ mistake in your source code, please explain how to improve your code.
 
 ### Areas to Improve
 1. **Validate user input**: Controllers accept any quantity (even negative) or name, so adding validation annotations or methods would prevent negative or empty data from being persisted. Furthermore, inputs also should be sanitized to prevent injection.
+
+
 
 # Reflection 2
 
@@ -37,5 +51,3 @@ What do you think about the cleanliness of the code of the new functional test s
 the new code reduce the code quality? Identify the potential clean code issues, explain
 the reasons, and suggest possible improvements to make the code cleaner!
 1. Adding another functional test suite with the same setup would be redundant, as it would duplicate a lot of code, making maintenance harder and violating "Don’t Repeat Yourself". Changes to setup logic (e.g., new base path or credentials) would have to be updated in multiple classes. The duplication also hurts clarity because common concerns like input helpers or context resets are scattered. Extracting shared Selenium utilities/helpers or using an abstract base class for functional tests would keep setup in one place and keep each suite focused on its specific assertions.
-
-

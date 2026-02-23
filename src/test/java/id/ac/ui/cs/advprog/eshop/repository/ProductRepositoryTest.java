@@ -1,7 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.repository;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,10 +15,6 @@ class ProductRepositoryTest {
 
     @InjectMocks
     ProductRepository productRepository;
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     void testCreateAndFind() {
@@ -91,8 +86,55 @@ class ProductRepositoryTest {
 
     }
 
+    
+    @Test
+    void testCreateAndEditNonexistingId() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("does-not-exist");
+        updatedProduct.setProductName("Bukan Sampo Cap Bambang");
+        updatedProduct.setProductQuantity(99);
+        productRepository.update(updatedProduct);
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+        Product savedProduct = productIterator.next();
+        assertNotEquals(99, savedProduct.getProductQuantity());
+
+    }
+
+    @Test
+    void testCreateGeneratesIdWhenMissing() {
+        Product product = new Product();
+        product.setProductName("AutoId Product");
+        product.setProductQuantity(10);
+
+        productRepository.create(product);
+
+        assertNotNull(product.getProductId());
+        assertFalse(product.getProductId().isEmpty());
+    }
+
+    @Test
+    void testCreateGeneratesIdWhenEmptyString() {
+        Product product = new Product();
+        product.setProductId("");
+        product.setProductName("AutoId Product");
+        product.setProductQuantity(10);
+
+        productRepository.create(product);
+
+        assertNotNull(product.getProductId());
+        assertFalse(product.getProductId().isEmpty());
+    }
+
     @Test
     void testEditNonExistingProduct() {
+        
         Product updatedProduct = new Product();
         updatedProduct.setProductId("does-not-exist");
         updatedProduct.setProductName("Not Exist");
@@ -103,7 +145,24 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void testUpdateNullProductReturnsNull() {
+        Product result = productRepository.update(null);
+        assertNull(result);
+    }
+
+    @Test
+    void testUpdateProductWithoutIdReturnsNull() {
+        Product product = new Product();
+        product.setProductName("No Id");
+        product.setProductQuantity(5);
+
+        Product result = productRepository.update(product);
+        assertNull(result);
+    }
+
+    @Test
     void testCreateAndDelete() {
+        
         Product product = new Product();
         product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         product.setProductName("Sampo Cap Bambang");
@@ -111,6 +170,31 @@ class ProductRepositoryTest {
         productRepository.create(product);
 
         Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+
+        productRepository.delete(product);
+        assertFalse(productIterator.hasNext());
+
+
+    }
+
+        @Test
+    void testDeleteAllProductInRepo() {
+        Product product = new Product();
+        product.setProductName("abc");
+        product.setProductId("some-id");
+
+        Product product2 = new Product();
+        product.setProductName("def");
+        product.setProductId("some-id-2");
+
+        productRepository.create(product);
+        productRepository.create(product2);
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+
+        productRepository.delete(product2);
         assertTrue(productIterator.hasNext());
 
         productRepository.delete(product);
@@ -129,5 +213,65 @@ class ProductRepositoryTest {
         productRepository.delete(ghostProduct);
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testDeleteNullProductDoesNothing() {
+        Product product = new Product();
+        product.setProductId("some-id");
+        productRepository.create(product);
+
+        productRepository.delete(null);
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+    }
+
+    @Test
+    void testDeleteProductWithoutIdDoesNothing() {
+        Product product = new Product();
+        product.setProductId("some-id");
+        productRepository.create(product);
+
+        Product noId = new Product();
+        productRepository.delete(noId);
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+    }
+
+    @Test
+    void testFindByIdInputNullReturnsNull() {
+        assertNull(productRepository.findById(null));
+    }
+
+    @Test
+    void testFindByIdCorrect() {
+        Product product = new Product();
+        product.setProductName("abc");
+        product.setProductId("some-id");
+
+        Product product2 = new Product();
+        product.setProductName("def");
+        product.setProductId("some-id-2");
+
+        productRepository.create(product);
+        productRepository.create(product2);
+        assertEquals("def", productRepository.findById("some-id-2").getProductName() );
+    }
+
+    @Test
+    void testFindByIdNonExistingProduct() {
+        Product product = new Product();
+        product.setProductName("abc");
+        product.setProductId("some-id");
+
+        Product product2 = new Product();
+        product.setProductName("def");
+        product.setProductId("some-id-2");
+
+        productRepository.create(product);
+        productRepository.create(product2);
+        assertNull(productRepository.findById("does-not-exist"));
     }
 }

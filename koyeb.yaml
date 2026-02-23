@@ -1,0 +1,19 @@
+name: eshop
+services:
+  - name: eshop-web
+    type: web
+    region: singapore
+    routes:
+      - src_path: /
+        dest_port: 8080
+    ports:
+      - http: 8080
+    env:
+      - key: JAVA_TOOL_OPTIONS
+        value: "-XX:MaxRAMPercentage=75.0"
+    git:
+      repo: https://github.com/nail-nail/eshop
+      branch: module-2-exercise
+      workdir: .
+      build_command: ./gradlew clean bootJar
+      run_command: sh -c "java -jar build/libs/*.jar --server.port=\${PORT:-8000}"

@@ -3,17 +3,19 @@ plugins {
     jacoco
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.sonarqube") version "5.1.0.4882"
 }
 
 group = "id.ac.ui.cs.advprog"
 version = "0.0.1-SNAPSHOT"
 description = "eshop"
 
-val seleniumJavaVersion = "4.14.1"
+val seleniumJavaVersion = "4.41.0"
 val seleniumJupiterVersion = "5.0.1"
-val webdrivermanagerVersion = "5.6.3"
+val webdrivermanagerVersion = "5.9.3"
 val junitJupiterVersion = "5.10.2"
 val junitPlatformVersion = "1.10.2"
+val mockitoVersion = "5.2.0"
 
 java {
     toolchain {
@@ -40,6 +42,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.mockito:mockito-inline:$mockitoVersion")
     testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
     testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
     testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
@@ -55,7 +58,18 @@ tasks.register<Test>(name = "unitTest") {
     }
 }
 
-tasks.register<Test>(name = "functionalTest") {
+	tasks.withType<Test>().configureEach {
+	    useJUnitPlatform()
+	}
+	tasks.test {
+	    filter {
+	        excludeTestsMatching("*FunctionalTest")
+	    }
+
+	    finalizedBy(tasks.jacocoTestReport)
+	}
+
+	tasks.register<Test>(name = "functionalTest") {
     description = "Runs functional tests."
     group = "verification"
 
@@ -63,18 +77,34 @@ tasks.register<Test>(name = "functionalTest") {
         includeTestsMatching("*FunctionalTest")
     }
 }
+	tasks.jacocoTestReport {
+	    dependsOn(tasks.test)
+	    reports {
+	        xml.required.set(true)
+	        csv.required.set(false)
+	        html.required.set(true)
+	    }
+	}
 
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
-}
-tasks.test {
-    filter {
-        excludeTestsMatching("*FunctionalTest")
-    }
+	sonarqube {
+	    properties {
+	        val sonarProjectKey = System.getenv("SONAR_PROJECT_KEY")?.takeIf { it.isNotBlank() } ?: "eshop"
+	        property("sonar.projectKey", sonarProjectKey)
+	        property("sonar.projectName", "eshop")
+	        System.getenv("SONAR_ORGANIZATION")?.takeIf { it.isNotBlank() }?.let {
+	            property("sonar.organization", it)
+	        }
+	        System.getenv("SONAR_HOST_URL")?.takeIf { it.isNotBlank() }?.let {
+	            property("sonar.host.url", it)
+	        }
+	        System.getenv("SONAR_TOKEN")?.takeIf { it.isNotBlank() }?.let {
+	            property("sonar.login", it)
+	            property("sonar.token", it)
+	        }
+	        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml").get().asFile.absolutePath)
+	    }
+	}
 
-    finalizedBy(tasks.jacocoTestReport)
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
+tasks.named("sonar") {
+    dependsOn("test", "jacocoTestReport")
 }
