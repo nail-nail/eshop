@@ -60,7 +60,7 @@ class ProductControllerTest {
     void createProductPage_shouldProvideEmptyModel() throws Exception {
         mockMvc.perform(get("/product/create"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("createProduct"))
+                .andExpect(view().name("create/createProduct"))
                 .andExpect(model().attributeExists("product"));
     }
 
@@ -91,7 +91,7 @@ class ProductControllerTest {
 
         mockMvc.perform(get("/product/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("productList"))
+                .andExpect(view().name("list/productList"))
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attributeExists("products"));
     }
@@ -107,7 +107,7 @@ class ProductControllerTest {
 
         mockMvc.perform(get("/product/edit/1"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("editProduct"))
+                .andExpect(view().name("edit/editProduct"))
                 .andExpect(model().attribute("product", is(product)));
     }
 
