@@ -1,5 +1,16 @@
 #### Naila Khadijah - AdvProg B
 
+Modul 3:
+Reclection:
+1. Explain what principles you apply to your project! 
+I revisited the Car flow and enforced SRP in the repository by letting `update` only responsible for updating and changed so it delegate the lookup to `findById`, so there is only one place that knows how to locate a record. I also fixed DIP/OCP violation by wiring `CarController` to the `CarService` interface via constructor injection, which means the controller neither knows nor cares whether the underlying implementation is in‑memory or persistent. On the interface side I trimmed `deleteCarById` down to a more general `delete`, which keeps the service contract small enough that consumers only learn about the behaviors they truly need.
+
+2. Explain the advantages of applying SOLID principles to your project with examples. 
+Injecting `CarService` instead of `CarServiceImpl` means I can write controller tests by supplying a fake service, or later add a caching layer without touching the controller at all, which is the Open/Closed Principle in action. Centralizing the lookup inside `CarRepository.findById` prevents future contributors from patching bugs in multiple loops, so SRP and DRY reinforce each other and the `update` logic becomes less error‑prone. 
+
+3. Explain the disadvantages of not applying SOLID principles to your project with examples. 
+Before the refactor the controller referenced `CarServiceImpl` directly, so introducing a second implementation would require editing and retesting every controller that used cars, which is the exact opposite of OCP. The repository had two different loops that searched by ID, so a bug in the matching logic would have to be fixed in multiple places and would likely regress one of them, which shows us ignoring SRP multiplies maintenance cost. Lastly, exposing a very specific `deleteCarById` method forces every future service implementation—say, a batch delete—to implement semantics it may not care about, which is how bloated interfaces slow down development.
+
 Modul 2:
 deployment link: https://sound-lois-nail-nail-db1080b4.koyeb.app/
 
