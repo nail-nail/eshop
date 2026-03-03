@@ -22,8 +22,8 @@
         <tbody>
         <tr th:each="car: ${cars}">
             <td th:text="${car.carName}"></td>
-            <td th:text="${car.carColor}"></td>
             <td th:text="${car.carQuantity}"></td>
+            <td th:text="${car.carColor}"></td>
             <td>
                 <a th:href="@{/car/editCar/{id}(id=${car.carId})}" class="btn btn-info btn-sm">Edit</a>
             </td>
