@@ -1,4 +1,25 @@
 #### Naila Khadijah - AdvProg B
+Modul 4:
+1. Reflect based on Percival (2017) proposed self-reflective questions (in “Principles and Best 
+Practice of Testing” submodule, chapter “Evaluating Your Testing Objectives”), whether this 
+TDD flow is useful enough for you or not. If not, explain things that you need to do next time 
+you make more tests.
+
+Based on the TDD flow followed in this tutorial, TDD is quite useful because it forces me to understand the requirements before writing code. By writing tests first, I am more confident that the implementation already aligns with the specification. However, the challenge is that it requires high discipline to not immediately write the implementation, and I must truly understand the requirements before coding in order to write the tests. Going forward, I need to make sure every edge case is covered from the start, and to not skip the RED-GREEN-REFACTOR cycle.
+
+2. You have created unit tests in Tutorial. Now reflect whether your tests have successfully 
+followed F.I.R.S.T. principle or not. If not, explain things that you need to do the next time you 
+create more tests. 
+
+The tests created already sufficiently follow the F.I.R.S.T. principles:
+- **Fast**: Each test runs in milliseconds because it uses mocks.
+- **Independent**: Each test uses `@BeforeEach` so they do not depend on one another.
+- **Repeatable**: Tests can be run in any environment because they do not depend on a database.
+- **Self-validating**: Uses clear assertions (assertEquals, assertThrows, etc.).
+- **Timely**: Tests are written before the implementation, in accordance with TDD.
+
+The shortcoming is that some tests still need to be added for more complete edge case coverage.
+
 
 Modul 3:
 Reclection:
