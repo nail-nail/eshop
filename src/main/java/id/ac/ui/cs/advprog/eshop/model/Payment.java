@@ -5,6 +5,8 @@ import lombok.Getter;
 import java.util.Arrays;
 import java.util.Map;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+
 @Getter
 public class Payment {
     String id;
@@ -46,8 +48,7 @@ public class Payment {
     }
 
     public void setStatus(String status) {
-        String[] validStatuses = {"SUCCESS", "REJECTED"};
-        if (Arrays.stream(validStatuses).noneMatch(s -> s.equals(status))) {
+        if (!PaymentStatus.contains(status)) {
             throw new IllegalArgumentException();
         }
         this.status = status;
