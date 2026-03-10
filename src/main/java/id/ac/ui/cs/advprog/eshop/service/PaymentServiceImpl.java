@@ -24,19 +24,23 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
         return payment;
     }
+        
+    private void syncOrderStatus(Payment payment, String paymentStatus) {
+        if ("SUCCESS".equals(paymentStatus)) {
+            orderService.updateStatus(payment.getId(), "SUCCESS");
+        } else if ("REJECTED".equals(paymentStatus)) {
+            orderService.updateStatus(payment.getId(), "FAILED");
+        }
+    }
 
     @Override
     public Payment setStatus(Payment payment, String status) {
         payment.setStatus(status);
         paymentRepository.save(payment);
-        if ("SUCCESS".equals(status)) {
-            orderService.updateStatus(payment.getId(), "SUCCESS");
-        } else if ("REJECTED".equals(status)) {
-            orderService.updateStatus(payment.getId(), "FAILED");
-        }
+        syncOrderStatus(payment, status);
         return payment;
     }
-
+    
     @Override
     public Payment getPayment(String paymentId) {
         return paymentRepository.getPayment(paymentId);
